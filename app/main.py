@@ -1,12 +1,16 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordRequestForm
 from . import models, schemas, database, auth
 
-app = FastAPI(title="Scalyz Challenge API")
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Create tables automatically on startup
+    models.Base.metadata.create_all(bind=database.engine)
+    yield
 
-# Create tables automatically on startup
-models.Base.metadata.create_all(bind=database.engine)
+app = FastAPI(title="Scalyz Challenge API", lifespan=lifespan)
 
 @app.get("/")
 def read_root():
