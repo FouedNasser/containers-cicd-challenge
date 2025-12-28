@@ -42,11 +42,11 @@ jobs:
 
       - name: Test Docker Compose startup
         run: |
-          docker-compose -f docker/docker-compose.yml up -d
+          docker compose -f docker/docker-compose.yml up -d
           # Wait for services to be healthy
           sleep 15
-          docker-compose -f docker/docker-compose.yml ps
+          docker compose -f docker/docker-compose.yml ps
           # Check if the app is responding
           curl -f http://localhost:8000/ || exit 1
           # Cleanup
-          docker-compose -f docker/docker-compose.yml down
+          docker compose -f docker/docker-compose.yml down
